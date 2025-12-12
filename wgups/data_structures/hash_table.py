@@ -1,5 +1,5 @@
 # manual hash table creation for package storage, retrieval and updating 
-class HashTable:
+class hash_table:
     def __init__(self, capacity):
         self.capacity = capacity 
         self.table = [[] for _ in range(capacity)]
