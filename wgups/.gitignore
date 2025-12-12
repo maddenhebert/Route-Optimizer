@@ -1,0 +1,6 @@
+# anything pycache
+__pycache__/
+*.pyc 
+
+# mac os files 
+.DS_Store
