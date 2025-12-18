@@ -3,8 +3,9 @@ import data_structures.hash_table as ht
 import objects.package as p 
 import datetime as dt
 import objects.truck as t
-import routing 
-import package_statuses as ps
+import logistics.routing as routing
+import logistics.package_statuses as ps
+import logistics.total_mileage as tm
 
 # DSA II - WGUPS Routing Program 
 #Student ID: 012600680
@@ -124,7 +125,7 @@ while program == True:
 
     # displays total mileage
     elif user_input == "2":
-        print(f"\nTotal mileage for all trucks is: {total_mileage} miles.")
+        print(f"\nTotal mileage for all trucks is: {truck1.mileage + truck2.mileage + truck3.mileage} miles.")
         print("\nWould you like to return to the interface? (y/n)")
         choice = input().lower().strip()
         if choice != 'y':
@@ -149,23 +150,7 @@ while program == True:
         # functioin to get statuses at a given time 
         statuses = ps.package_statuses(packages_table, selected_time, event_log, truck1, truck2, truck3, packages_table)
 
-        # holds value for total mileage
-        total_mileage = 0
-        largest_mileage = {}
-
-        # loop to take largest mileage from each truck before a given time
-        for event in event_log:
-            if event["time"] <= selected_time:
-                truck_id = event["truck_id"]
-                mileage = event["mileage"]
-
-                # 
-                if truck_id not in largest_mileage or mileage > largest_mileage[truck_id]:
-                    largest_mileage[truck_id] = mileage
-            
-        # adds all of the largest mileages 
-        for i in range(1,4):
-            total_mileage += largest_mileage.get(i, 0) 
+        total_mileage = tm.get_total_mileage(event_log, selected_time)
 
         # formats selected time 
         time_str = selected_time.strftime("%H:%M")

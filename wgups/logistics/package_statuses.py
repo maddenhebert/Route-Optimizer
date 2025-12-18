@@ -7,6 +7,9 @@ def package_statuses(packages_table, selected_time, event_log, truck1, truck2, t
     # extracts the delivery time from each package event 
     delivery_times = {event["package_id"] : event["time"] for event in event_log}
 
+    # adds time and dictionary for fast lookup of delayed packages
+    flight_packages = {6, 25, 28, 32} 
+    flight_arrival = dt.datetime.combine(selected_time, dt.time(9, 5))
 
     # loops through every package id
     for package_id in range(1, 41):
@@ -40,8 +43,11 @@ def package_statuses(packages_table, selected_time, event_log, truck1, truck2, t
             pck_str = package_id
 
         # these conditionals check time constraints to determine package status 
-        if selected_time < departure:
-            status[package_id] = f"Package {pck_str} At HUB on {truck} -------------- Deadline: Package to be delivered to {package.address} by {package.deadline}"
+        if selected_time < flight_arrival and package_id in flight_packages:
+            status[package_id] = f"Package {pck_str} on flight until 9:05 am -------- Deadline: Package to be delivered to {package.address} by {package.deadline}"
+
+        elif selected_time < departure:
+            status[package_id] = f"Package {pck_str} at HUB on {truck} -------------- Deadline: Package to be delivered to {package.address} by {package.deadline}"
 
         elif delivery_time <= selected_time:
             status[package_id] = f"Package {pck_str} Delivered at {str_time} on {truck} -- Deadline: Package to be delivered to {package.address} by {package.deadline}"
