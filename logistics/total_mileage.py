@@ -4,16 +4,16 @@ def get_total_mileage(event_log, selected_time):
     total_mileage = 0
     largest_mileage = {}
 
+    # uses the event log to collect largest mileages 
     for event in event_log:
         if event["time"] <= selected_time:
             truck_id = event["truck_id"]
             mileage = event["mileage"]
 
-            # 
             if truck_id not in largest_mileage or mileage > largest_mileage[truck_id]:
                 largest_mileage[truck_id] = mileage
         
-    # adds all of the largest mileages 
+    # adds all of the largest truck mileages 
     for i in range(1,4):
         total_mileage += largest_mileage.get(i, 0)
     

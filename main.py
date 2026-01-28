@@ -7,10 +7,7 @@ import logistics.routing as routing
 import logistics.package_statuses as ps
 import logistics.total_mileage as tm
 
-# DSA II - WGUPS Routing Program 
-#Student ID: 012600680
-
-# DATA PREP AND LOADING 
+# DATA HANDLING 
 # instantiates hash table with capacity of 40
 packages_table = ht.hash_table(40)
 
