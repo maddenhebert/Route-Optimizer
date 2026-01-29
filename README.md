@@ -1,4 +1,4 @@
-# A* Routing Delivery Routing Program 
+# A* Delivery Routing Program 
 
 A Python-based package delivery routing system implementing a greedy nearest-neighbor algorithm.
 
