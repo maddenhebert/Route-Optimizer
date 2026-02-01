@@ -16,7 +16,7 @@ def package_statuses(packages_table, selected_time, event_log, truck1, truck2, t
     for package_id in range(1, 41):
 
         # retrieves package object 
-        package = package_table.lookup(package_id)
+        package = package_table[package_id]
 
         # this sequence of conditionals checks which truck the package is on, and finds departure time 
         if package_id in truck1.starting_load:
