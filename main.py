@@ -3,8 +3,6 @@ import objects.package as p
 import datetime as dt
 import objects.truck as t
 import logistics.routing as routing
-import logistics.package_statuses as ps
-import logistics.total_mileage as tm
 import time
 
 # execution time
