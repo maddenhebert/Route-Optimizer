@@ -1,18 +1,15 @@
-# A* Delivery Routing Program 
+Route Optimizer
 
-A Python-based package delivery routing system implementing a greedy nearest-neighbor algorithm.
+A Python-based route generation system implementing an A-star algorithm with MSP heuristics and real world road network data..
 
 ## Features
-- Custom hash table data structure
-- Time-simulated multi-truck delivery
-- Deadline-aware routing
-- A* Routing Algorithm 
+- A-Star Algorithm with MST Heuristics* – Optimized pathfinding with admissible heuristics for guaranteed optimality
+- Real-World Network Integration – Actual road topology from OpenStreetMap with realistic distance/time calculations
+- Route Visualization - Most efficient route visualized on a plot using matplotlib
 
 ## Project Structure
-- data_structures/ – custom data structures
-- logistics/ – routing and distance logic
-- objects/ – domain models (Package, Truck, etc.)
-- csv/ – input datasets
+- logistics/ – Core routing algorithms (A*, distance matrix computation, heuristic functions)
+- objects/ – Stop object for nodes 
 
 ## How to Run
 python main.py
