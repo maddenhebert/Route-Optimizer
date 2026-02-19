@@ -1,6 +1,5 @@
 # Route Optimizer
-
-A Python-based route generation system implementing an A-star algorithm with MSP heuristics and real world road network data..
+A Python-based route generation system implementing an A-star algorithm with MSP heuristics and real world road network data.
 
 ## Features
 - A-Star Algorithm with MST Heuristics* – Optimized pathfinding with admissible heuristics for guaranteed optimality
