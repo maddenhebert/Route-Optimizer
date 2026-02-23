@@ -1,19 +1,19 @@
-from objects.Stop import Stop
-import logistics.routing as routing
-import time
-import osmnx as ox
+from Stop import Stop
+from graph import load_graph
+from a_star import a_star_routing 
 import networkx as nx
 import random
 import matplotlib.pyplot as plt
+import osmnx as ox
 
-# execution time
-start = time.perf_counter()
+# GRAPH LOADING 
+G = load_graph("Chicago, Illinois, USA")
 
-# DATA HANDLING 
-# creates a selection of 40 random nodes form salt lake city driving network 
-G = ox.graph_from_place("Salt Lake City, Utah, USA", network_type = "drive")
+# NODE CREATION 
+# takes G (map graph) and creates randon sample of given nodes
 stop_nodes = random.sample(list(G.nodes), 20)
 
+# MATRIX CALCULATION 
 # initializes a stop for each node and precomputes distances in matrix 
 stops = [Stop(node) for node in stop_nodes]
 
@@ -33,10 +33,9 @@ for i, src in enumerate(stop_nodes):
 
 # TESTING ALGORITHM AND VISUALS
 starting_node = stops[0].node
-g1, efficient_route = routing.a_star_routing(starting_node, stops, matrix, node_to_index)
-end = time.perf_counter()
-print(f'RUNTIME: {end - start:.6f} seconds')
+g1, efficient_route = a_star_routing(starting_node, stops, matrix, node_to_index)
 
+# GRAPH PLOTTING 
 # plot the network
 fig, ax = ox.plot_graph(G, node_size=5, edge_linewidth=0.5, show = False, close = False)
 
