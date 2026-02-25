@@ -3,13 +3,18 @@ from routing.service import compute_route
 from routing.graph import load_graph
 from app.schemas import RouteRequest, RouteResponse
 import random
+import threading 
 
 def get_graph(city: str):
     cache = app.state.graph_cache
 
-    if city not in cache:
-        print(f"Loading graph for {city}...")
-        cache[city] = load_graph(city)
+    if city in cache:
+        return cache[city]
+
+    with app.state.graph_lock:
+        if city not in cache:
+            print(f"Loading graph for {city}...")
+            cache[city] = load_graph(city)
 
     return cache[city]
 
@@ -18,6 +23,7 @@ app = FastAPI()
 @app.on_event("startup")
 def startup():
     app.state.graph_cache = {}
+    app.state.graph_lock = threading.Lock()
 
 @app.post("/route", response_model=RouteResponse)
 def route(request: RouteRequest):
