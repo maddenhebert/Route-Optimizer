@@ -1,17 +1,10 @@
-from Stop import Stop
-from graph import load_graph
-from a_star import a_star_routing 
-from distance_matrix import matrix_loader
+from .Stop import Stop
+from .graph import load_graph
+from .a_star import a_star_routing 
+from .distance_matrix import matrix_loader
 import random
 
-def compute_route():
-    # GRAPH LOADING 
-    G = load_graph("Chicago, Illinois, USA")
-
-    # NODE AND STOP CREATION 
-    # takes G (map graph) and creates randon sample of given nodes
-    stop_nodes = random.sample(list(G.nodes), 20)
-
+def compute_route(G, stop_nodes):
     # initializes a stop for each node and precomputes distances in matrix 
     stops = [Stop(node) for node in stop_nodes]
 
@@ -30,9 +23,4 @@ def compute_route():
     
     g1 = round(float(g1), 2)
 
-    return {
-        "total_distance": g1,
-        "route": route
-    }
-
-print(compute_route())
+    return g1, route
