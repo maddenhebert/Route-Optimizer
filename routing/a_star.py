@@ -4,11 +4,11 @@ import datetime as dt
 import heapq
 
 # Function for getting distance between two addresses
-def get_distance(n1, n2, distance_matrix, node_to_index):
-    return distance_matrix[node_to_index[n1]][node_to_index[n2]]
+def get_distance(n1, n2, distance_matrix):
+    return distance_matrix[n1][n2]
 
 # Heuristic 
-def heuristic(curr_node, remaining, distance_matrix, node_to_index):
+def heuristic(curr_node, remaining, distance_matrix):
     # handles goal state
     if not remaining:
         return 0
@@ -17,7 +17,7 @@ def heuristic(curr_node, remaining, distance_matrix, node_to_index):
 
     # determines min distances
     min_start = min(
-        get_distance(curr_node, n, distance_matrix, node_to_index)
+        get_distance(curr_node, n, distance_matrix)
         for n in remaining
     )
 
@@ -35,7 +35,7 @@ def heuristic(curr_node, remaining, distance_matrix, node_to_index):
 
         for v in visited:
             for u in unvisited:
-                dist = get_distance(v, u, distance_matrix, node_to_index)
+                dist = get_distance(v, u, distance_matrix)
                 if dist < min_edge and dist != float('inf'):
                     min_edge = dist
                     next_node = u
@@ -64,9 +64,9 @@ def reconstruct_path(parents, state):
     return path 
 
 # A* routing structure 
-def a_star_routing(start_node, stops, distance_matrix, node_to_index):
+def a_star_routing(start_node, stop_nodes, distance_matrix):
     # initial state
-    remaining = frozenset(stop.node for stop in stops if stop.node != start_node)
+    remaining = frozenset(node for node in stop_nodes if node != start_node)
     start_state = (start_node, remaining)
 
     pq = []
@@ -74,7 +74,7 @@ def a_star_routing(start_node, stops, distance_matrix, node_to_index):
 
     # initial values
     g_score = {start_state: 0}
-    h = heuristic(start_node, remaining, distance_matrix, node_to_index)
+    h = heuristic(start_node, remaining, distance_matrix)
 
     # intializes heap and pushes starting state
     heapq.heappush(pq, (h, 0, start_state))
@@ -94,11 +94,11 @@ def a_star_routing(start_node, stops, distance_matrix, node_to_index):
             new_state = (next_node, new_remaining)
 
             # calculating new g score 
-            new_g = g + get_distance(curr_node, next_node, distance_matrix, node_to_index)
+            new_g = g + get_distance(curr_node, next_node, distance_matrix)
 
             if new_state not in g_score or new_g < g_score[new_state]:
                 g_score[new_state] = new_g
-                h = heuristic(next_node, new_remaining, distance_matrix, node_to_index)
+                h = heuristic(next_node, new_remaining, distance_matrix)
                 f = new_g + h
                 heapq.heappush(pq, (f, new_g, new_state))
                 parents[new_state] = (curr_node, remaining, next_node)

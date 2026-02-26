@@ -5,7 +5,6 @@ from app.schemas import RouteRequest, RouteResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import osmnx as ox
-import random
 
 app = FastAPI()
 
