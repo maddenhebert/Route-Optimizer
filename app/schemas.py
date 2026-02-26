@@ -1,9 +1,12 @@
 from pydantic import BaseModel
 from typing import List
 
+class Coordinate(BaseModel):
+    lat: float
+    lon: float
+
 class RouteRequest(BaseModel):
-    city: str
-    num_stops: int
+    coordinates: List[Coordinate]
 
 class RouteResponse(BaseModel):
     total_distance: float
