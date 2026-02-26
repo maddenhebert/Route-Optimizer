@@ -1,10 +1,23 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Request
 from routing.service import compute_route
 from routing.graph import load_graph
 from app.schemas import RouteRequest, RouteResponse
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
+import osmnx as ox
 import random
 
 app = FastAPI()
+
+templates = Jinja2Templates(directory="app/templates")
+
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
+
+def is_within_bounds(lat, lon):
+    return (
+        41.60 <= lat <= 42.05 and
+        -87.95 <= lon <= -87.50
+    )
 
 @app.on_event("startup")
 def startup():
@@ -21,16 +34,33 @@ def ready():
         return {"status": "loading"}
     return {"status": "ready"}
 
+@app.get("/")
+def home(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
 @app.post("/route", response_model=RouteResponse)
 def route(request: RouteRequest):
 
     G = app.state.graph
 
-    stop_nodes = random.sample(list(G.nodes), request.num_stops)
+    stop_nodes = []
 
-    total_distance, route = compute_route(G, stop_nodes)
+    for coord in request.coordinates:
+        if not is_within_bounds(coord.lat, coord.lon):
+            raise HTTPException(status_code=400, detail="Coordinate outside Chicago bounds")
+
+    for coord in request.coordinates:
+        node = ox.nearest_nodes(G, X=coord.lon, Y=coord.lat)
+        stop_nodes.append(node)
+
+    total_distance, full_path = compute_route(G, stop_nodes)
+
+    route_coords = [
+    {"lat": G.nodes[n]["y"], "lon": G.nodes[n]["x"]}
+    for n in full_path
+    ]
 
     return RouteResponse(
         total_distance=total_distance,
-        route=route
+        route=route_coords
     )

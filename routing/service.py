@@ -2,7 +2,7 @@ from .Stop import Stop
 from .graph import load_graph
 from .a_star import a_star_routing 
 from .distance_matrix import matrix_loader
-import random
+import networkx as nx
 
 def compute_route(G, stop_nodes):
     # initializes a stop for each node and precomputes distances in matrix 
@@ -23,4 +23,20 @@ def compute_route(G, stop_nodes):
     
     g1 = round(float(g1), 2)
 
-    return g1, route
+    # CONVERTING ORDERED STOPS TO FULL PATH
+    full_path = [] 
+
+    for i in range(len(route) - 1):
+        segment = nx.shortest_path(
+            G,
+            route[i],
+            route[i + 1],
+            weight="'length"
+        )
+
+        if i > 0:
+            segment = segment[i:]
+        
+        full_path.extend(segment)
+
+    return g1, full_path

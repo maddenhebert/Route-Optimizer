@@ -10,4 +10,4 @@ class RouteRequest(BaseModel):
 
 class RouteResponse(BaseModel):
     total_distance: float
-    route: List[int]
+    route: List[Coordinate]

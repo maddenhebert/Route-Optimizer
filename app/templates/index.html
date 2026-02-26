@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Route Optimizer</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <style>
+        #map { height: 90vh; }
+        button { padding: 10px; margin: 10px; }
+    </style>
+</head>
+<body>
+
+<h2>Click to Select Stops</h2>
+<button onclick="sendRoute()">Compute Route</button>
+<button onclick="clearAll()">Clear Stops</button>
+
+<div id="map"></div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+var map = L.map('map', {
+    minZoom: 10,
+    maxZoom: 18
+}).setView([41.88, -87.63], 12);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+}).addTo(map);
+
+var chicagoBounds = [
+    [41.60, -87.95],
+    [42.05, -87.50]  
+];
+
+map.setMaxBounds(chicagoBounds);
+
+let selectedPoints = [];
+let markers = [];
+let routeLine = null;
+
+map.on('click', function(e) {
+
+    let marker = L.marker(e.latlng).addTo(map);
+
+    let coord = {
+        lat: e.latlng.lat,
+        lon: e.latlng.lng
+    };
+
+    marker.coord = coord; 
+
+    selectedPoints.push(coord);
+    markers.push(marker);
+
+    marker.on('click', function() {
+        removeMarker(marker);
+    });
+});
+
+function removeMarker(marker) {
+
+    map.removeLayer(marker);
+
+    selectedPoints = selectedPoints.filter(
+        p => p !== marker.coord
+    );
+
+    markers = markers.filter(
+        m => m !== marker
+    );
+}
+
+function clearAll() {
+    markers.forEach(marker => map.removeLayer(marker));
+    markers = [];
+    selectedPoints = [];
+}
+
+function sendRoute() {
+    fetch("/route", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            coordinates: selectedPoints
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        drawRoute(data.route);
+    });
+}
+
+function drawRoute(route) {
+    if (routeLine) {
+        map.removeLayer(routeLine);
+    }
+
+    let latlngs = route.map(point => [point.lat, point.lon]);
+
+    routeLine = L.polyline(latlngs).addTo(map);
+}
+</script>
+
+</body>
+</html>
