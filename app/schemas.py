@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List
 
 class Coordinate(BaseModel):
@@ -6,7 +6,7 @@ class Coordinate(BaseModel):
     lon: float
 
 class RouteRequest(BaseModel):
-    coordinates: List[Coordinate]
+    coordinates: List[Coordinate] = Field(min_items=2)
 
 class RouteResponse(BaseModel):
     total_distance: float
