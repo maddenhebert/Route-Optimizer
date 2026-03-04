@@ -7,7 +7,7 @@ A Python-based route generation system implementing an A-star algorithm with MSP
 - Route Visualization - Most efficient route visualized on a plot using matplotlib
 
 ## Project Structure
-- logistics/ – Core routing algorithms (A*, distance matrix computation, heuristic functions)
+- routing/ – Core routing algorithms (A*, distance matrix computation, heuristic functions)
 - objects/ – Stop object for nodes 
 
 ## How to Run
