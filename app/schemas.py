@@ -6,7 +6,7 @@ class Coordinate(BaseModel):
     lon: float
 
 class RouteRequest(BaseModel):
-    coordinates: List[Coordinate] = Field(min_items=2)
+    coordinates: List[Coordinate] = Field(min_items=2, max_items=10)
 
 class RouteResponse(BaseModel):
     total_distance: float
